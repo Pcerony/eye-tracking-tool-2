@@ -11,4 +11,5 @@
 - [x] Remove countdown in `ImageViewer` and set background to pure white
 - [x] Improve vertical eye tracking accuracy
 - [x] Fix `TypeError: Cannot assign to read only property 'data' of object '#<ImageData>'` in `Heatmap` component
-  - Replaced `heatmap.js` with a custom native Canvas implementation to avoid compatibility issues and direct `ImageData` manipulation errors.
+- [x] Fix eye tracking not running due to `display: none` on video element
+  - Changed hiding method to `opacity: 0` and moved off-screen (`top: -9999px`) to ensure video processing continues.

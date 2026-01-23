@@ -58,12 +58,16 @@ export const useWebGazer = () => {
           .applyKalmanFilter(true);
         
         // Force hide video element if it exists
+        // CRITICAL FIX: Do NOT use display: none, as it stops video processing in some browsers
         const videoElement = document.getElementById('webgazerVideoFeed');
         if (videoElement) {
-          videoElement.style.display = 'none';
-          // Also set style to ensure it stays hidden
+          videoElement.style.display = 'block'; // Must be block/inline to process frames
+          videoElement.style.position = 'fixed';
+          videoElement.style.top = '-9999px'; // Move off-screen
+          videoElement.style.left = '-9999px';
           videoElement.style.opacity = '0';
           videoElement.style.pointerEvents = 'none';
+          videoElement.style.zIndex = '-1';
         }
 
 
