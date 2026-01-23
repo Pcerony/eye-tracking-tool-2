@@ -11,8 +11,14 @@ export interface GazeData {
 export const useWebGazer = () => {
   const [isReady, setIsReady] = useState(false);
   const [isTracking, setIsTracking] = useState(false);
+  const isTrackingRef = useRef(false); // Ref to track state inside closure
   const [gazeData, setGazeData] = useState<GazeData | null>(null);
   const gazeDataRef = useRef<GazeData[]>([]);
+
+  // Sync ref with state
+  useEffect(() => {
+    isTrackingRef.current = isTracking;
+  }, [isTracking]);
 
   useEffect(() => {
     const initWebGazer = async () => {
@@ -32,7 +38,8 @@ export const useWebGazer = () => {
               setGazeData(currentGaze);
               
               // Only record data if we are explicitly tracking (not just calibrating)
-              if (isTracking) {
+              // Use ref to access current state inside closure
+              if (isTrackingRef.current) {
                 gazeDataRef.current.push(currentGaze);
               }
             }
@@ -46,23 +53,20 @@ export const useWebGazer = () => {
 
         // Hide the default video preview and prediction points provided by webgazer
         // We will build our own UI
-        webgazer.showVideoPreview(true)
-          .showPredictionPoints(true)
+        webgazer.showVideoPreview(false)
+          .showPredictionPoints(false)
           .applyKalmanFilter(true);
-
-        // Adjust video position to be less intrusive during dev/calibration
+        
+        // Force hide video element if it exists
         const videoElement = document.getElementById('webgazerVideoFeed');
         if (videoElement) {
-          videoElement.style.display = 'block';
-          videoElement.style.position = 'fixed';
-          videoElement.style.top = '10px';
-          videoElement.style.left = '10px';
-          videoElement.style.width = '320px';
-          videoElement.style.height = '240px';
-          videoElement.style.zIndex = '9999';
-          videoElement.style.borderRadius = '12px';
-          videoElement.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+          videoElement.style.display = 'none';
+          // Also set style to ensure it stays hidden
+          videoElement.style.opacity = '0';
+          videoElement.style.pointerEvents = 'none';
         }
+
+
 
         setIsReady(true);
       } catch (error) {
