@@ -6,3 +6,4 @@
   - Use `useCallback` for exposed functions.
   - Throttle state updates if necessary (though current implementation separates tracking data from state).
 - [ ] Verify tracking start/stop logic ensures data integrity.
+- [x] Remove the eye tracking icon image from the Home page as requested by the user.

@@ -80,14 +80,7 @@ export default function Home() {
         
         {/* Hero Section */}
         <div className="text-center space-y-6 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
-            <img 
-              src="/images/eye-tracking-icon.png" 
-              alt="Eye Tracking Icon" 
-              className="w-32 h-32 mx-auto relative z-10 drop-shadow-2xl"
-            />
-          </div>
+
           
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary via-purple-500 to-secondary">
             Visual Analytics
