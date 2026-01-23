@@ -12,4 +12,8 @@
 - [x] Improve vertical eye tracking accuracy
 - [x] Fix `TypeError: Cannot assign to read only property 'data' of object '#<ImageData>'` in `Heatmap` component
 - [x] Fix eye tracking not running due to `display: none` on video element
-  - Changed hiding method to `opacity: 0` and moved off-screen (`top: -9999px`) to ensure video processing continues.
+- [x] Add real-time gaze cursor
+  - Created `GazeCursor` component and integrated it into Home, Calibration, and ImageViewer.
+- [x] Simplify calibration process
+  - Reduced calibration points to 9 (3x3).
+  - Reduced clicks per point to 3.

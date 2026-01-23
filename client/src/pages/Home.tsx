@@ -1,4 +1,5 @@
 import { Calibration } from "@/components/Calibration";
+import { GazeCursor } from "@/components/GazeCursor";
 import { ImageViewer } from "@/components/ImageViewer";
 import { PrivacyNotice } from "@/components/PrivacyNotice";
 import { Report } from "@/components/Report";
@@ -146,14 +147,7 @@ export default function Home() {
 
         {/* Real-time Gaze Indicator (Debug) */}
         {gazeData && !isViewing && !isCalibrating && (
-          <div 
-            className="fixed w-6 h-6 rounded-full border-2 border-primary bg-primary/30 pointer-events-none z-[9999] transition-all duration-75 ease-out"
-            style={{ 
-              left: gazeData.x, 
-              top: gazeData.y,
-              transform: 'translate(-50%, -50%)'
-            }}
-          />
+          <GazeCursor x={gazeData.x} y={gazeData.y} active={true} />
         )}
 
       </main>
@@ -162,16 +156,21 @@ export default function Home() {
         <Calibration 
           onCalibrate={calibratePoint}
           onComplete={handleCalibrationComplete}
+          gazeX={gazeData?.x || 0}
+          gazeY={gazeData?.y || 0}
         />
       )}
 
       {isViewing && uploadedImage && (
-        <ImageViewer
-          imageUrl={uploadedImage}
-          onClose={() => setIsViewing(false)}
-          onStartTracking={startTracking}
-          onStopTracking={handleTrackingStop}
-        />
+        <>
+          <GazeCursor x={gazeData?.x || 0} y={gazeData?.y || 0} active={true} />
+          <ImageViewer
+            imageUrl={uploadedImage}
+            onClose={() => setIsViewing(false)}
+            onStartTracking={startTracking}
+            onStopTracking={handleTrackingStop}
+          />
+        </>
       )}
     </div>
   );
