@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // @ts-ignore
 import webgazer from 'webgazer';
 
@@ -78,19 +78,19 @@ export const useWebGazer = () => {
     };
   }, []);
 
-  const startTracking = () => {
+  const startTracking = useCallback(() => {
     gazeDataRef.current = [];
     setIsTracking(true);
-  };
+  }, []);
 
-  const stopTracking = () => {
+  const stopTracking = useCallback(() => {
     setIsTracking(false);
     return gazeDataRef.current;
-  };
+  }, []);
 
-  const calibratePoint = (x: number, y: number) => {
+  const calibratePoint = useCallback((x: number, y: number) => {
     webgazer.recordScreenPosition(x, y, 'click');
-  };
+  }, []);
 
   return {
     isReady,

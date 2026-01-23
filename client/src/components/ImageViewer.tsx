@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ImageViewerProps {
   imageUrl: string;
@@ -13,11 +13,15 @@ export function ImageViewer({ imageUrl, onClose, onStartTracking, onStopTracking
   const [countdown, setCountdown] = useState(3);
   const [isViewing, setIsViewing] = useState(false);
 
+  // Use a ref to track if we have already started tracking to prevent double calls
+  const hasStartedRef = useRef(false);
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (countdown > 0) {
       timer = setTimeout(() => setCountdown(c => c - 1), 1000);
-    } else {
+    } else if (!hasStartedRef.current) {
+      hasStartedRef.current = true;
       setIsViewing(true);
       onStartTracking();
     }
