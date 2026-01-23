@@ -7,11 +7,8 @@
 - [x] Fix text overlap/occlusion in the Calibration interface
 - [x] Fix Calibration instruction box blocking calibration points
 - [x] Fix empty data report issue
-  - The gaze listener closure captures stale state. Use `useRef` to track `isTracking` state inside the listener.
 - [x] Hide webcam preview globally
-  - Set `webgazer.showVideoPreview(false)` and ensure video element is hidden via CSS.
 - [x] Remove countdown in `ImageViewer` and set background to pure white
-  - Start tracking immediately upon image load.
-  - Set background color to `#ffffff`.
 - [x] Improve vertical eye tracking accuracy
-  - Increase calibration points from 3x3 (9 points) to 3x4 (12 points) to provide more vertical data.
+- [x] Fix `TypeError: Cannot assign to read only property 'data' of object '#<ImageData>'` in `Heatmap` component
+  - Replaced `heatmap.js` with a custom native Canvas implementation to avoid compatibility issues and direct `ImageData` manipulation errors.
