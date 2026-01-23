@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, MousePointerClick } from "lucide-react";
+import { CheckCircle2, MousePointerClick, Play } from "lucide-react";
 import { useState } from "react";
 
 interface CalibrationProps {
@@ -23,6 +23,7 @@ const CALIBRATION_POINTS = [
 export function Calibration({ onCalibrate, onComplete }: CalibrationProps) {
   const [clicks, setClicks] = useState<Record<number, number>>({});
   const [accuracy, setAccuracy] = useState<number>(0);
+  const [isStarted, setIsStarted] = useState(false);
 
   const handlePointClick = (index: number, e: React.MouseEvent) => {
     const { clientX, clientY } = e;
@@ -45,53 +46,91 @@ export function Calibration({ onCalibrate, onComplete }: CalibrationProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex flex-col items-center justify-center">
-      {/* Instructions Overlay - Added z-index and background to prevent overlap issues */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-[60] text-center space-y-4 animate-in fade-in slide-in-from-top-4 duration-700 bg-background/80 p-6 rounded-2xl backdrop-blur-md border border-border/50 shadow-lg max-w-lg w-full">
-        <h2 className="text-3xl font-bold tracking-tight">Eye Calibration</h2>
-        <p className="text-muted-foreground">
-          Please click each red dot 5 times while looking directly at it. 
-          <br/>
-          <span className="font-medium text-foreground">Keep your head still for best results.</span>
-        </p>
-        <div className="flex items-center justify-center gap-2 mt-2">
-          <div className="h-2 w-64 bg-secondary rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-primary transition-all duration-500 ease-out"
-              style={{ width: `${accuracy}%` }}
-            />
+      
+      {/* Step 1: Instructions Overlay - Only shown before starting */}
+      {!isStarted && (
+        <div className="absolute inset-0 z-[60] flex items-center justify-center bg-background/80 backdrop-blur-md">
+          <div className="text-center space-y-6 animate-in fade-in zoom-in duration-500 bg-card p-8 rounded-3xl border border-border shadow-2xl max-w-lg mx-4">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto text-primary">
+              <MousePointerClick className="w-8 h-8" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold tracking-tight">Calibration Setup</h2>
+              <p className="text-muted-foreground text-lg">
+                We need to map your eye movements to the screen.
+              </p>
+            </div>
+            <div className="bg-muted/50 p-4 rounded-xl text-left space-y-3 text-sm">
+              <p className="flex items-start gap-2">
+                <span className="bg-primary text-primary-foreground w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">1</span>
+                Click each red dot <strong>5 times</strong> while looking directly at it.
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="bg-primary text-primary-foreground w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">2</span>
+                Keep your head still and maintain a comfortable distance.
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="bg-primary text-primary-foreground w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5">3</span>
+                Points will turn green when calibrated.
+              </p>
+            </div>
+            <Button 
+              size="lg" 
+              className="w-full text-lg h-12 rounded-xl"
+              onClick={() => setIsStarted(true)}
+            >
+              <Play className="w-5 h-5 mr-2" />
+              Start Calibration
+            </Button>
           </div>
-          <span className="text-sm font-medium text-muted-foreground">{Math.round(accuracy)}%</span>
         </div>
-      </div>
+      )}
 
-      {CALIBRATION_POINTS.map((pos, index) => {
-        const clickCount = clicks[index] || 0;
-        const isDone = clickCount >= 5;
-        
-        return (
-          <button
-            key={index}
-            className={cn(
-              "absolute w-8 h-8 rounded-full transition-all duration-300 flex items-center justify-center",
-              isDone 
-                ? "bg-green-500 shadow-[0_0_20px_rgba(34,197,94,0.5)] scale-75" 
-                : "bg-destructive shadow-[0_0_15px_rgba(239,68,68,0.5)] hover:scale-125 active:scale-90"
-            )}
-            style={{ left: pos.x, top: pos.y }}
-            onClick={(e) => handlePointClick(index, e)}
-            disabled={isDone}
-          >
-            {isDone ? (
-              <CheckCircle2 className="w-5 h-5 text-white" />
-            ) : (
-              <div className="w-2 h-2 bg-white rounded-full opacity-50" />
-            )}
-          </button>
-        );
-      })}
+      {/* Step 2: Calibration Points - Only active after starting */}
+      {isStarted && (
+        <>
+          {/* Minimal Progress Indicator */}
+          <div className="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-background/80 backdrop-blur px-4 py-2 rounded-full border border-border shadow-sm animate-in fade-in slide-in-from-top-4">
+            <span className="text-sm font-medium text-muted-foreground">Progress</span>
+            <div className="h-2 w-32 bg-secondary rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-primary transition-all duration-500 ease-out"
+                style={{ width: `${accuracy}%` }}
+              />
+            </div>
+            <span className="text-sm font-bold text-primary">{Math.round(accuracy)}%</span>
+          </div>
+
+          {CALIBRATION_POINTS.map((pos, index) => {
+            const clickCount = clicks[index] || 0;
+            const isDone = clickCount >= 5;
+            
+            return (
+              <button
+                key={index}
+                className={cn(
+                  "absolute w-8 h-8 rounded-full transition-all duration-300 flex items-center justify-center outline-none focus:ring-4 focus:ring-primary/30",
+                  isDone 
+                    ? "bg-green-500 shadow-[0_0_20px_rgba(34,197,94,0.5)] scale-75 cursor-default" 
+                    : "bg-destructive shadow-[0_0_15px_rgba(239,68,68,0.5)] hover:scale-125 active:scale-90 cursor-pointer animate-pulse"
+                )}
+                style={{ left: pos.x, top: pos.y }}
+                onClick={(e) => handlePointClick(index, e)}
+                disabled={isDone}
+              >
+                {isDone ? (
+                  <CheckCircle2 className="w-5 h-5 text-white" />
+                ) : (
+                  <div className="w-2 h-2 bg-white rounded-full opacity-50" />
+                )}
+              </button>
+            );
+          })}
+        </>
+      )}
 
       {isComplete && (
-        <div className="absolute bottom-12 animate-in fade-in slide-in-from-bottom-8 duration-500">
+        <div className="absolute bottom-12 animate-in fade-in slide-in-from-bottom-8 duration-500 z-[70]">
           <Button 
             size="lg" 
             onClick={onComplete}
