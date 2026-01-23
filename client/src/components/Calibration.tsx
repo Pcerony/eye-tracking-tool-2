@@ -45,13 +45,15 @@ export function Calibration({ onCalibrate, onComplete }: CalibrationProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex flex-col items-center justify-center">
-      <div className="absolute top-8 text-center space-y-2 animate-in fade-in slide-in-from-top-4 duration-700">
+      {/* Instructions Overlay - Added z-index and background to prevent overlap issues */}
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-[60] text-center space-y-4 animate-in fade-in slide-in-from-top-4 duration-700 bg-background/80 p-6 rounded-2xl backdrop-blur-md border border-border/50 shadow-lg max-w-lg w-full">
         <h2 className="text-3xl font-bold tracking-tight">Eye Calibration</h2>
-        <p className="text-muted-foreground max-w-md mx-auto">
+        <p className="text-muted-foreground">
           Please click each red dot 5 times while looking directly at it. 
-          Keep your head still for best results.
+          <br/>
+          <span className="font-medium text-foreground">Keep your head still for best results.</span>
         </p>
-        <div className="flex items-center justify-center gap-2 mt-4">
+        <div className="flex items-center justify-center gap-2 mt-2">
           <div className="h-2 w-64 bg-secondary rounded-full overflow-hidden">
             <div 
               className="h-full bg-primary transition-all duration-500 ease-out"

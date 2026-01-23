@@ -40,6 +40,10 @@ export const useWebGazer = () => {
           .saveDataAcrossSessions(true)
           .begin();
 
+        // Disable default mouse click calibration to prevent "mouse following" bias
+        // We will manually handle calibration points
+        webgazer.removeMouseEventListeners();
+
         // Hide the default video preview and prediction points provided by webgazer
         // We will build our own UI
         webgazer.showVideoPreview(true)
