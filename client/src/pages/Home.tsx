@@ -73,7 +73,7 @@ export default function Home() {
       
       {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://files.manuscdn.com/user_upload_by_module/session_file/310519663308765288/wPfYAsgBJXpuWVMf.jpg')] bg-cover bg-center opacity-50" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('/images/hero-bg.jpg')] bg-cover bg-center opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/80 to-background" />
       </div>
 
